@@ -29,7 +29,7 @@ class Store(models.Model):
 class Goods(models.Model):
     goods_name = models.CharField(max_length=32,verbose_name="商品名称")
     goods_price = models.FloatField(verbose_name="商品价格")
-    goods_image = models.ImageField(upload_to="store/images"  ,verbose_name="商品图片")
+    goods_image = models.ImageField(upload_to="store/images" ,verbose_name="商品图片")
     goods_number = models.IntegerField(verbose_name="商品数量库存")
     goods_description = models.TextField(verbose_name="商品描述")
     goods_date = models.FloatField(verbose_name="出厂日期")
