@@ -23,7 +23,7 @@
         <tbody>
             {% for goods in page %}
                 <tr>
-                    <td>{{ goods.goods_name }}</td>
+                    <td><a href="/StoreApp/goods/{{ goods.id }}/">{{ goods.goods_name }}</a></td>
                     <td>
                         <input type="text" value="{{ goods.goods_price }}">
                     </td>
@@ -43,11 +43,9 @@
         <ul class="pagination">
             {% for p in page_range %}
             <li class="paginate_button page-item">
-                <a class="page-link" href="/StoreApp/list_goods/?page={{ p }}">{{ p }}</a>
+                <a class="page-link" href="?keyword={{ keywords }}&page={{ p }}">{{ p }}</a>
             </li>
             {% endfor %}
-
         </ul>
-
     </div>
 {% endblock %}

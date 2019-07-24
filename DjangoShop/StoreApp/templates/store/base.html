@@ -18,9 +18,7 @@
   <!-- Custom styles for this template-->
   <link href="/static/store/css/sb-admin-2.min.css" rel="stylesheet">
   {% block style %}
-
   {% endblock %}
-
 </head>
 
 <body id="page-top">
@@ -29,6 +27,7 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
+  {% if request.COOKIES.has_store %}
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
@@ -36,7 +35,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">商城管理平台</div>
+        <div class="sidebar-brand-text mx-3">老边管理平台</div>
       </a>
 
       <!-- Divider -->
@@ -44,19 +43,12 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        {% if is_store %}
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="/StoreApp/index/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>店铺管理</span>
         </a>
-        {% else %}
-        <a class="nav-link" href="index.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>没有店铺，注册一个</span>
-        </a>
-        {% endif %}
-      </li>
 
+      </li>
       <!-- Divider -->
       <hr class="sidebar-divider">
 
@@ -76,22 +68,30 @@
             <h6 class="collapse-header">商品管理:</h6>
             <a class="collapse-item" href="/StoreApp/add_goods/">添加商品</a>
             <a class="collapse-item" href="/StoreApp/list_goods/">商品列表</a>
-              <a class="collapse-item" href="cards.html">商品详情</a>
-
           </div>
         </div>
       </li>
-
-      <!-- Nav Item - Utilities Collapse Menu -->
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
     </ul>
+  {% else %}
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">老边管理平台{{ request.COOKIES.has_store }}</div>
+      </a>
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item">
+       <a class="nav-link" href="/StoreApp/register_store/">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>没有店铺，注册一个</span>
+        </a>
+      </li>
+    </ul>
+  {% endif %}
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -285,15 +285,12 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
           <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800">{% block label %} {% endblock %}</h1>
-
+          <h1 class="h3 mb-4 text-gray-800">{% block label%}{% endblock %}</h1>
         </div>
         <!-- /.container-fluid -->
         <div class="container">
             {% block content %}
-            
             {% endblock %}
         </div>
       </div>
@@ -349,9 +346,7 @@
   <!-- Custom scripts for all pages-->
   <script src="/static/store/js/sb-admin-2.min.js"></script>
   {% block script %}
-
   {% endblock %}
-
 </body>
 
 </html>
