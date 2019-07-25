@@ -151,27 +151,33 @@ def add_goods(request):
 
 
 @loginValid
-def list_goods(request):
+def list_goods(request,state):
     """
     商品的列表页
+    state 商品状态
+        up 在售
+        down下架
     """
     #获取两个关键字
+    if state == "up":
+        state_num = 1
+    else:
+        state_num = 0
     keywords = request.GET.get("keywords","") #查询关键词
     page_num = request.GET.get("page",1) #页码
     #查询店铺
     store_id = request.COOKIES.get("has_store")
     store = Store.objects.get(id=int(store_id))
-
     if keywords: #判断关键词是否存在
-        goods_list = store.goods_set.filter(goods_name__contains=keywords)#完成了模糊查询
+        goods_list = store.goods_set.filter(goods_name__contains=keywords,goods_under=state_num)#完成了模糊查询
     else: #如果关键词不存在，查询所有
-        goods_list = store.goods_set.all()
+        goods_list = store.goods_set.filter(goods_under=state_num)
     #分页，每页3条
     paginator = Paginator(goods_list,3)
     page = paginator.page(int(page_num))
     page_range = paginator.page_range
     #返回分页数据
-    return render(request,"store/goods_list.html",{"page":page,"page_range":page_range,"keywords":keywords})
+    return render(request,"store/goods_list.html",{"page":page,"page_range":page_range,"keywords":keywords,"state":state})
 
 
 @loginValid
@@ -216,6 +222,25 @@ def base(request):
     #查询拥有指定商品的所有
 
 # Create your views here.
+
+
+
+def set_goods(request,state):
+    if state == "up":
+        state_num = 1
+    else:
+        state_num = 0
+    id = request.GET.get("id")
+    referer = request.META.get("HTTP_REFERER")
+    if id:
+        goods = Goods.objects.filter(id=id).first()
+        if state =="delete":
+            goods.delete()
+        else:
+            goods.goods_under = state_num
+            goods.save()
+    return HttpResponseRedirect(referer)
+
 
 
 def CookieTest(request):
