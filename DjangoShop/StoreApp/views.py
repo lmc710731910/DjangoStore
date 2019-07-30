@@ -4,6 +4,8 @@ from django.core.paginator import Paginator
 from django.shortcuts import HttpResponseRedirect
 from StoreApp.models import *
 
+from StoreApp.models import *
+from BuyerApp.models import *
 
 def loginValid(fun):
     def inner(request,*args,**kwargs):
@@ -61,9 +63,11 @@ def login(request):
                 #校验密码是否正确
                 if user.password ==web_password and cookies == "login_page":
                     response = HttpResponseRedirect("/StoreApp/index/")
+                    #检测是否登录
                     response.set_cookie("username",username)
-                    response.set_cookie("user_id",user.id)  #cookie提供用户id 方便其他功能查询
                     request.session["username"] = username
+
+                    response.set_cookie("user_id", user.id)  # cookie提供用户id 方便其他功能查询
                     #校验是否有店铺
                     store = Store.objects.filter(user_id=user.id).first() #在查询店铺是否存在
                     if store:
@@ -121,6 +125,7 @@ def register_store(request):
 @loginValid
 def add_goods(request):
     #负责添加商品
+    goods_type_list = GoodsType.objects.all()
     if request.method =="POST":
         #获取post请求
         goods_name = request.POST.get("goods_name")
@@ -129,6 +134,9 @@ def add_goods(request):
         goods_description = request.POST.get("goods_description")
         goods_date = request.POST.get("goods_date")
         goods_safeDate = request.POST.get("goods_safeDate")
+
+        goods_type = request.POST.get("goods_type")
+
         goods_store = request.POST.get("goods_store")
         goods_image = request.FILES.get("goods_image")
         #开始保存数据
@@ -140,14 +148,13 @@ def add_goods(request):
         goods.goods_date = goods_date
         goods.goods_safeDate = goods_safeDate
         goods.goods_image = goods_image
+
+        goods.goods_type = GoodsType.objects.get(id = int(goods_type))
+        goods.store_id = Store.objects.get(id = int(goods_store))
         goods.save()
         #保存多对多数据
-        goods.store_id.add(
-            Store.objects.get(id = int(goods_store))
-        )
-        goods.save()
-        return HttpResponseRedirect("/StoreApp/list_goods/")
-    return render(request,"store/add_goods.html")
+        return HttpResponseRedirect("/StoreApp/list_goods/up/")
+    return render(request,"store/add_goods.html",locals())
 
 
 @loginValid
@@ -214,6 +221,30 @@ def update_goods(request,goods_id):
     return render(request,"store/update_goods.html",locals())
 
 
+@loginValid
+def list_goods_type(request):
+    goods_type_list = GoodsType.objects.all()
+    if request.method == "POST":
+        name = request.POST.get("name")
+        description = request.POST.get("description")
+        picture = request.FILES.get("picture")
+
+        goods_type = GoodsType()
+        goods_type.name = name
+        goods_type.description = description
+        goods_type.picture = picture
+        goods_type.save()
+    return render(request,"store/goods_type_list.html",locals())
+
+
+@loginValid
+def delete_goods_type(request):
+    id = int(request.GET.get("id"))
+    goods = GoodsType.objects.get(id = id)
+    goods.delete()
+    return HttpResponseRedirect("/Store/list_goods_type/")
+
+
 def base(request):
     return render(request,"store/base.html")
 
@@ -222,25 +253,6 @@ def base(request):
     #查询拥有指定商品的所有
 
 # Create your views here.
-
-
-
-def set_goods(request,state):
-    if state == "up":
-        state_num = 1
-    else:
-        state_num = 0
-    id = request.GET.get("id")
-    referer = request.META.get("HTTP_REFERER")
-    if id:
-        goods = Goods.objects.filter(id=id).first()
-        if state =="delete":
-            goods.delete()
-        else:
-            goods.goods_under = state_num
-            goods.save()
-    return HttpResponseRedirect(referer)
-
 
 
 def CookieTest(request):
@@ -261,6 +273,32 @@ def CookieTest(request):
     return response
 
 
+def set_goods(request,state):
+    if state == "up":
+        state_num = 1
+    else:
+        state_num = 0
+    id = request.GET.get("id")
+    referer = request.META.get("HTTP_REFERER")
+    if id:
+        goods = Goods.objects.filter(id=id).first()
+        if state =="delete":
+            goods.delete()
+        else:
+            goods.goods_under = state_num
+            goods.save()
+    return HttpResponseRedirect(referer)
 
+
+def order_list(request):
+    store_id = request.COOKIES.get("has_store")
+    order_list = OrderDetail.objects.filter(order_id__order_status=2,goods_store=store_id)
+    return render(request,"store/order_list.html",locals())
+
+def logout(request):
+    response = HttpResponseRedirect("/Store/login/")
+    for key in request.COOKIES:#获取当前所有cookie
+        response.delete_cookie(key)
+    return response
 
 

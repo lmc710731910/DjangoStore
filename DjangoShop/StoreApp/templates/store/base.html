@@ -73,6 +73,30 @@
           </div>
         </div>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>订单管理</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">商品管理:</h6>
+            <a class="collapse-item" href="/StoreApp/order_list/">待处理订单</a>
+            <a class="collapse-item" href="/StoreApp/list_goods/up/">以完成订单</a>
+
+          </div>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/StoreApp/list_goods_type/" >
+          <i class="fas fa-fw fa-cog"></i>
+          <span>商品类型管理</span>
+        </a>
+
+      </li>
+
     </ul>
   {% else %}
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -273,7 +297,7 @@
                   登录日志
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                <a class="dropdown-item" href="/StoreApp/logout/" >
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                   退出
                 </a>

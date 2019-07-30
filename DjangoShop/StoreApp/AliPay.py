@@ -1,0 +1,29 @@
+from alipay import AliPay
+
+alipay_public_key_string = """-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvDLACgfW7LL0fImgia0Pr7mEXmGJWxxy15RSvCuy2O4Qq+eAdBKw1yMOaHTeBTrWNDv6iBk+EyNuSs2CdMFwdHXF3GCmyLTm+SXXrDY016DaHFSQJPKplh0UrkcI8GvriWpCdbOSPBuoSgBShugyP9hz2ua05+ilJ9eBolrYVLNWDByPrsnbXXuHmIc8QdYj3NYq20e790feJgJaTCt1lthoh5T7DShGiEDC33cRGHzDo4YV4LKg5Azy+xbc8EdMI972U4rnWpzc5pulG7YMHnjJZmad3Z7hiegWFoAkUd+wClfwvj3HS6vTLgkzFapHmVCLocuL/L6eIZbZPjQ8yQIDAQAB
+-----END PUBLIC KEY-----"""
+
+
+app_private_key_string = """-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAvDLACgfW7LL0fImgia0Pr7mEXmGJWxxy15RSvCuy2O4Qq+eAdBKw1yMOaHTeBTrWNDv6iBk+EyNuSs2CdMFwdHXF3GCmyLTm+SXXrDY016DaHFSQJPKplh0UrkcI8GvriWpCdbOSPBuoSgBShugyP9hz2ua05+ilJ9eBolrYVLNWDByPrsnbXXuHmIc8QdYj3NYq20e790feJgJaTCt1lthoh5T7DShGiEDC33cRGHzDo4YV4LKg5Azy+xbc8EdMI972U4rnWpzc5pulG7YMHnjJZmad3Z7hiegWFoAkUd+wClfwvj3HS6vTLgkzFapHmVCLocuL/L6eIZbZPjQ8yQIDAQABAoIBAFft7kPBfe2BfzFgrB0nOpkDuJDQSXjERfPrXOyGDj3EnQ10UFPrF6ysuGKdl84hu0sUau2Dvbj7aOCSPE2Iw53mGNfqYIKN4wytXaMcgHvur3llGSPqLMnyNGNo1Qhfo+DEQOD1UXG8Cljo5aYafr/NxfOUrxlbXS7MRckxYLnRc1T11pLLTFviu+RfIHnEJfPLhWsOUE/IHtUNxwDTWf02McTFYKLVZaJt0gFQrXTfEWLYF907mcewQMWrlEMa40n4vr/Hm91XCfdACQXslTfmg4jZu1hvW9E/nXSAOMz5SjEJtWOf5mYtTN3YE+ij1Yj3eA6mgjmEhI+szcpPh3ECgYEA3tPdWdp/Ba069xreCkRoF895ZJvQLdLBvXdo4yaHO/twrJxEEJYP8jWk4p22tKcR5URlZaBL5tlN4ssFZyaezHhkasPWt9Wis7xu7YkzHb0RQZALexd3/WlxV50y9duEs31X/mYH/GpbtDAt6G0HwPF2N5+EFSwcynCuI5IVsKsCgYEA2DciL7Q9MoflIqQG/lkF1/Mho3JNJ+Rx8K7C93n2iUL7hg1vK1df9WpKX63H3Mf+spz7vuNem8hhSZeJERIicT/C11ZDjiclxnUrNbu7dKWYZPZiDoX8t+lBaiGzzgFKTkwn/Xg8qigDJSby/Mye7fOw/CwG6dKMgcGNRDXbUFsCgYEAueSiG13u7jtwn8moR4R+Gq8ZpNdgO3pB6uB9flMcKuw/OaE8H2Ixd21NW0kbrWZbxZrjxH6QE8xh77xTi5RqkkY17+Plc4QksjGXkU8Od9bNWJblHRGdJqoaxm78nqM998ev6yoPq4LHcnFnOyoKd+p5JzpKpKcidbi/bilnMvUCgYB1j7TE32mO+hj6dtlenqTwwEAAEPwmvq29Qii8StJj28nLH67ckAua8woxb9oGD7BLCdRP/GzKo29ShlR+ta+IiDS2xS7CMkL132t5MfRA/nEYJGc4ol3A2dE5lc2gK09ttzbfOOszUcI0BzODhPa9Rw1qb73qkRLY0pavCeGPlQKBgDlhWpx14brUiybP5+YrzY4EYmOZ+QhzwOVZiPz6eFZANnkNfmVN6gpEs/CaIzArGeIpn0MH6Qnk8DZcuPDyb9Yxj1evK3K5GrentiSUERV+/fVs0TpJhAGetEeZXWMjyfbfqiC9w3Ixg4eDoDBAyifQloMEifWLLEzknsf2VpWU
+-----END RSA PRIVATE KEY-----"""
+
+alipay = AliPay(
+    appid = "2016101000652507",
+    app_notify_url = None,
+    app_private_key_string = app_private_key_string,
+    alipay_public_key_string = alipay_public_key_string,
+    sign_type= "RSA2"
+)
+
+#发起支付请求
+order_string = alipay.api_alipay_trade_page_pay(
+    out_trade_no="334751", #订单号
+    total_amount=str(27300.7),#支付金额
+    subject="SKⅡ官方旗舰店", #交易主题
+    return_url=None,
+    notify_url=None
+)
+
+print("https://openapi.alipaydev.com/gateway.do?"+order_string)
